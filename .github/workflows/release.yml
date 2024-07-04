@@ -23,6 +23,8 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+      id-token: write
+      attestations: write
     steps:
     - uses: actions/checkout@v4
     - name: set up JDK 17
@@ -55,6 +57,9 @@ jobs:
         tag_name: ${{ github.event.inputs.version }}
         files: |
           app/build/outputs/apk/release/app-release.apk
+    - uses: actions/attest-build-provenance@v1
+      with:
+        subject-path: app/build/outputs/apk/release/app-release.apk
     - name: Bump version code
       uses: peter-evans/create-pull-request@v6
       with:
@@ -65,4 +70,3 @@ jobs:
         base: main
         add-paths: |
           *.gradle.kts
-          
